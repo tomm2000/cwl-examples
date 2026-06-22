@@ -1,0 +1,44 @@
+version: v1.0
+workflows:
+  master:
+    type: cwl
+    config:
+      file: main.cwl
+      settings: inputs.yml
+    bindings:
+      - step: /step1
+        target:
+          deployment: local
+
+      # One binding covers ALL scatter instances of step2.
+      # If elements has 10 items, streamflow dispatches 10 jobs to Slurm concurrently.
+      - step: /step2
+        target:
+          deployment: slurm
+          service: broadwell
+
+      - step: /step3
+        target:
+          deployment: local
+
+deployments:
+  local:
+    type: local
+    config: {}
+
+  hpc:
+    type: ssh
+    config:
+      username: <username>
+      nodes:
+        - <hpc-hostname>
+      sshKey: <path/to/ssh/key>
+      checkHostKey: false
+
+  slurm:
+    type: slurm
+    wraps: hpc
+    config:
+      services:
+        broadwell:
+          partition: broadwell
