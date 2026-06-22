@@ -39,4 +39,4 @@ find "$SCRIPT_DIR" -name "streamflow.yml" | while read -r f; do
     apply "$f"
 done
 
-$DRY_RUN && echo "(dry-run complete — no files changed)"
+$DRY_RUN && echo "(dry-run complete — no files changed)" || true
