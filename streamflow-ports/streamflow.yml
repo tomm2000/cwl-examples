@@ -1,0 +1,71 @@
+version: v1.0
+
+# KEY CONCEPT: streamflow bindings have two kinds of entries:
+#
+#   step: /name   → WHERE to run the computation (which deployment executes it)
+#   port: /name   → WHERE to find an input file/directory (which deployment holds it)
+#
+# Port bindings are essential when input data already lives on a remote system.
+# Instead of uploading from local → HPC, streamflow reads the file directly
+# from the remote deployment's workdir.
+#
+# In this example:
+#   - both steps run on the HPC cluster (broadwell partition)
+#   - param_file lives in /data/workflow/ on the HPC
+#   - data_dir lives in /scratch/snapshots/ on the HPC (different path)
+#   - the viewer step runs locally (e.g. to render results on the local machine)
+
+workflows:
+  master:
+    type: cwl
+    config:
+      file: main.cwl
+      settings: inputs.yml
+    bindings:
+      # Step bindings: where each step runs
+      - step: /inspect
+        target:
+          deployment: hpc-slurm
+          service: broadwell
+
+      - step: /process
+        target:
+          deployment: local
+
+      # Port bindings: where each File/Directory input is sourced from.
+      # streamflow transfers the file FROM this deployment into the step's workdir.
+      # workdir is the directory on the remote where the file path in inputs.yml is resolved.
+      - port: /param_file
+        target:
+          deployment: hpc-ssh
+          workdir: /data/workflow
+
+      - port: /data_dir
+        target:
+          deployment: hpc-ssh
+          workdir: /scratch/snapshots
+
+deployments:
+  local:
+    type: local
+    config: {}
+
+  hpc-ssh:
+    type: ssh
+    config:
+      nodes:
+        - <hpc-hostname>
+      username: <username>
+      sshKey: /home/<user>/.ssh/id_rsa
+      checkHostKey: false
+    workdir: /tmp/streamflow
+
+  hpc-slurm:
+    type: slurm
+    wraps: hpc-ssh
+    config:
+      services:
+        broadwell:
+          partition: broadwell
+          # time: "01:00:00"
+          # mem: "8G"

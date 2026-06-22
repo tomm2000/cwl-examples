@@ -1,0 +1,9 @@
+# Paths here are RELATIVE to the port binding's workdir on the remote system.
+# Streamflow resolves them on whichever deployment the port: binding points to.
+param_file:
+  class: File
+  path: params.txt
+
+data_dir:
+  class: Directory
+  path: snapdir

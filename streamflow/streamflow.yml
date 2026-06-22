@@ -1,0 +1,54 @@
+version: v1.0
+workflows:
+  master:
+    type: cwl
+    config: 
+      file: main.cwl
+      settings: inputs.yml
+    bindings:
+      - step: /step1
+        target: 
+          deployment: local
+      - step: /step2_1
+        target: 
+          deployment: slurm
+          service: broadwell
+      - step: /step2_2
+        target: 
+          deployment: slurm
+          service: broadwell
+      - step: /step2_3
+        target: 
+          deployment: slurm
+          service: broadwell
+      - step: /step3
+        target: 
+          deployment: local
+
+deployments:
+  hpc:
+    type: ssh
+    # workdir: <path/to/workdir>
+    config:
+      username: <username>
+      nodes: 
+        - <address of node 1>
+        - <address of node 2>
+      sshKey: <path/to/ssh/key>
+      checkHostKey: false
+
+
+  slurm:
+    type: slurm
+    # workdir: <path/to/workdir>
+    wraps: hpc
+    config:
+      services: 
+        broadwell:
+          # other slurm parameters can be set here, e.g. time, memory, etc.
+          partition: broadwell
+    
+  local:
+    type: local
+    config: {}
+      

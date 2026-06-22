@@ -1,0 +1,16 @@
+version: v1.0
+workflows:
+  master:
+    type: cwl
+    config:
+      file: tool.cwl
+      settings: inputs.yml
+    bindings:
+      - step: /
+        target:
+          deployment: local
+
+deployments:
+  local:
+    type: local
+    config: {}
