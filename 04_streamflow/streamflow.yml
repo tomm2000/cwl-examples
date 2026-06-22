@@ -28,19 +28,17 @@ workflows:
 deployments:
   hpc:
     type: ssh
-    # workdir: <path/to/workdir>
+    workdir: <HPC_WORKDIR>
     config:
-      username: <username>
-      nodes: 
-        - <address of node 1>
-        - <address of node 2>
-      sshKey: <path/to/ssh/key>
+      username: <HPC_USER>
+      nodes:
+        - <HPC_HOST>
+      sshKey: <SSH_KEY>
       checkHostKey: false
-
 
   slurm:
     type: slurm
-    # workdir: <path/to/workdir>
+    workdir: <HPC_WORKDIR>
     wraps: hpc
     config:
       services: 

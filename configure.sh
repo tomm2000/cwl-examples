@@ -25,14 +25,10 @@ apply() {
     fi
     cp "$file" "$file.bak"
     sed -i \
-        -e "s|<username>|$HPC_USER|g" \
-        -e "s|<user>|$HPC_USER|g" \
-        -e "s|<hpc-hostname>|$HPC_HOST|g" \
-        -e "s|<address of node 1>|$HPC_HOST|g" \
-        -e "s|- <address of node 2>||g" \
-        -e "s|<path/to/ssh/key>|$SSH_KEY|g" \
-        -e "s|/home/<user>/\.ssh/id_rsa|$SSH_KEY|g" \
-        -e "s|# workdir: <path/to/workdir>|workdir: $HPC_WORKDIR|g" \
+        -e "s|<HPC_USER>|$HPC_USER|g" \
+        -e "s|<HPC_HOST>|$HPC_HOST|g" \
+        -e "s|<SSH_KEY>|$SSH_KEY|g" \
+        -e "s|<HPC_WORKDIR>|$HPC_WORKDIR|g" \
         "$file"
     echo "patched: $file"
 }

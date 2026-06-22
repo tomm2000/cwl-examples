@@ -29,10 +29,10 @@ deployments:
   hpc:
     type: ssh
     config:
-      username: <username>
+      username: <HPC_USER>
       nodes:
-        - <hpc-hostname>
-      sshKey: <path/to/ssh/key>
+        - <HPC_HOST>
+      sshKey: <SSH_KEY>
       checkHostKey: false
 
   slurm:

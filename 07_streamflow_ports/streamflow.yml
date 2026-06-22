@@ -54,11 +54,11 @@ deployments:
     type: ssh
     config:
       nodes:
-        - <hpc-hostname>
-      username: <username>
-      sshKey: /home/<user>/.ssh/id_rsa
+        - <HPC_HOST>
+      username: <HPC_USER>
+      sshKey: <SSH_KEY>
       checkHostKey: false
-    workdir: /tmp/streamflow
+    workdir: <HPC_WORKDIR>
 
   hpc-slurm:
     type: slurm
