@@ -16,6 +16,18 @@ outputs:
     type: string
     outputSource: process/result
 
+  # KEY CONCEPT: File outputs from remote steps are automatically transferred
+  # back to local by streamflow when the workflow finishes.
+  # summary_file was produced on the HPC; streamflow fetches it to --outdir.
+  summary_file:
+    type: File
+    outputSource: inspect/summary
+
+  # report was produced by the local step; also collected to --outdir.
+  report:
+    type: File
+    outputSource: process/report
+
 steps:
   inspect:
     run: inspect.cwl
@@ -28,4 +40,4 @@ steps:
     run: process.cwl
     in:
       summary: inspect/summary
-    out: [result]
+    out: [result, report]

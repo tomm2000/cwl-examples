@@ -28,6 +28,7 @@ deployments:
 
   hpc:
     type: ssh
+    workdir: <HPC_WORKDIR>
     config:
       username: <HPC_USER>
       nodes:
@@ -37,8 +38,10 @@ deployments:
 
   slurm:
     type: slurm
+    workdir: <HPC_WORKDIR>
     wraps: hpc
     config:
+      maxConcurrentJobs: 10
       services:
         broadwell:
           partition: broadwell

@@ -9,7 +9,8 @@
 HPC_USER="tommaso.fogliobonda"
 HPC_HOST="c3s"                         # SSH hostname or address
 SSH_KEY="/home/tommo/.ssh/unito"             # absolute path to private key on this machine
-HPC_WORKDIR="/beegfs/home/tommaso.fogliobonda/cwl-examples"   # working dir on HPC
+HPC_WORKDIR="/beegfs/home/tommaso.fogliobonda/tmp/streamflow"   # working dir on HPC
+PORT_WORKDIR="/beegfs/home/tommaso.fogliobonda/cwl-examples/07_streamflow_ports"  # where port input files live on HPC
 # ────────────────────────────────────────────────────────────────────────────
 
 DRY_RUN=false
@@ -29,6 +30,7 @@ apply() {
         -e "s|<HPC_HOST>|$HPC_HOST|g" \
         -e "s|<SSH_KEY>|$SSH_KEY|g" \
         -e "s|<HPC_WORKDIR>|$HPC_WORKDIR|g" \
+        -e "s|<PORT_WORKDIR>|$PORT_WORKDIR|g" \
         "$file"
     echo "patched: $file"
 }

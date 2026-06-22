@@ -1,5 +1,18 @@
 version: v1.0
 
+# OUTPUT COLLECTION:
+# File outputs declared in the CWL workflow are automatically transferred back
+# to local by streamflow when the workflow completes — no manual scp needed.
+#
+# Where outputs land is controlled by --outdir on the CLI:
+#   streamflow run streamflow.yml --outdir ./results
+#
+# Without --outdir, outputs are written to the current directory.
+#
+# In this example:
+#   summary_file  → produced by `inspect` on HPC → fetched back to local → placed in --outdir
+#   report        → produced by `process` locally → placed in --outdir
+
 # KEY CONCEPT: streamflow bindings have two kinds of entries:
 #
 #   step: /name   → WHERE to run the computation (which deployment executes it)
@@ -10,10 +23,9 @@ version: v1.0
 # from the remote deployment's workdir.
 #
 # In this example:
-#   - both steps run on the HPC cluster (broadwell partition)
-#   - param_file lives in /data/workflow/ on the HPC
-#   - data_dir lives in /scratch/snapshots/ on the HPC (different path)
-#   - the viewer step runs locally (e.g. to render results on the local machine)
+#   - inspect runs on the HPC cluster (broadwell partition)
+#   - process runs locally
+#   - param_file and data_dir are sourced from the HPC workdir (port bindings below)
 
 workflows:
   master:
@@ -38,12 +50,12 @@ workflows:
       - port: /param_file
         target:
           deployment: hpc-ssh
-          workdir: /data/workflow
+          workdir: <PORT_WORKDIR>
 
       - port: /data_dir
         target:
           deployment: hpc-ssh
-          workdir: /scratch/snapshots
+          workdir: <PORT_WORKDIR>
 
 deployments:
   local:

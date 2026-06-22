@@ -15,7 +15,9 @@ inputs:
     type: File
 
 arguments:
-  - valueFrom: "cat $(inputs.summary.basename)"
+  # tee writes to report.txt AND stdout simultaneously.
+  # stdout is captured as stdout.txt → used for the string output.
+  - valueFrom: "cat $(inputs.summary.basename) | tee report.txt"
 
 outputs:
   result:
@@ -24,5 +26,9 @@ outputs:
       glob: stdout.txt
       loadContents: true
       outputEval: $(self[0].contents.trim())
+  report:
+    type: File
+    outputBinding:
+      glob: report.txt
 
 stdout: stdout.txt
